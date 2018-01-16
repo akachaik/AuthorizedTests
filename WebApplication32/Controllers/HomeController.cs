@@ -9,7 +9,6 @@ using WebApplication32.Models;
 
 namespace WebApplication32.Controllers
 {        
-    [AllowAnonymous]
     public class HomeController : Controller
     {
 

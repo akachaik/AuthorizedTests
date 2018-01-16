@@ -12,9 +12,9 @@ namespace UnitTestProject1
     public class UnitTest1
     {
         [TestMethod]
-        [DataRow("admin")]
-        [DataRow("users")]
-        [DataRow("account")]
+        [DataRow(Roles.Admin)]
+        [DataRow(Roles.Users)]
+        [DataRow(Roles.Account)]
         public void RoleAuthorizedTests(string role)
         {
             //var controller = new HomeController();
@@ -149,5 +149,11 @@ namespace UnitTestProject1
             T attribute = attributes.Count() == 0 ? null : (T)attributes[0];
             return attribute;
         }
+    }
+    public class Roles
+    {
+        public const string Admin = "Admin";
+        public const string Users = "Users";
+        public const string Account = "Account";
     }
 }
