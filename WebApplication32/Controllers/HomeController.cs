@@ -18,7 +18,7 @@ namespace WebApplication32.Controllers
             return View();
         }
 
-        [Authorize(Roles = "Admin", Policy = "Abc")]
+        [Authorize(Roles = "Admin,Users", Policy = "Abc")]
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";

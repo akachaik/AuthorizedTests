@@ -12,14 +12,16 @@ namespace UnitTestProject1
     public class UnitTest1
     {
         [TestMethod]
-        public void TestMethod1()
+        [DataRow("admin")]
+        [DataRow("users")]
+        public void TestMethod1(string role)
         {
             var controller = new HomeController();
 
             Assert.IsTrue(AuthorizationTest.IsAnonymous(controller, nameof(HomeController.Index), null));
-            Assert.IsTrue(AuthorizationTest.IsAuthorized(controller, nameof(HomeController.About), null, new[] { "Admin" }, null));
+            Assert.IsTrue(AuthorizationTest.IsAuthorized(controller, nameof(HomeController.About), null, new[] { role }, null));
 
-            AuthorizationTest.IsAuthorized(controller, nameof(HomeController.About), null, new[] { "Admin" }, null).Should()
+            //AuthorizationTest.IsAuthorized(controller, nameof(HomeController.About), null, new[] { "Admin" }, null).Should()
         }
     }
 
