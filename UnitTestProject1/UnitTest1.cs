@@ -14,14 +14,23 @@ namespace UnitTestProject1
         [TestMethod]
         [DataRow("admin")]
         [DataRow("users")]
-        public void TestMethod1(string role)
+        [DataRow("account")]
+        public void RoleAuthorizedTests(string role)
         {
-            var controller = new HomeController();
-
-            Assert.IsTrue(AuthorizationTest.IsAnonymous(controller, nameof(HomeController.Index), null));
-            Assert.IsTrue(AuthorizationTest.IsAuthorized(controller, nameof(HomeController.About), null, new[] { role }, null));
+            //var controller = new HomeController();
+            Assert.IsTrue(AuthorizationTest.IsAuthorized(typeof(HomeController), nameof(HomeController.About), null, new[] { role }, null));
 
             //AuthorizationTest.IsAuthorized(controller, nameof(HomeController.About), null, new[] { "Admin" }, null).Should()
+        }
+
+        [TestMethod]
+        public void AnonymousTests()
+        {
+
+            Assert.IsTrue(AuthorizationTest.IsAnonymous(typeof(HomeController), nameof(HomeController.Index), null));
+            Assert.IsTrue(AuthorizationTest.IsAnonymous(typeof(HomeController), nameof(HomeController.Contact), null));
+            Assert.IsTrue(AuthorizationTest.IsAnonymous(typeof(HomeController), nameof(HomeController.Error), null));
+
         }
     }
 
@@ -36,7 +45,7 @@ namespace UnitTestProject1
         /// <param name="methodName"></param>
         /// <param name="methodTypes">Optional</param>
         /// <returns>true is method is anonymous</returns>
-        public static bool IsAnonymous(Controller controller, string methodName, Type[] methodTypes)
+        public static bool IsAnonymous(Type controller, string methodName, Type[] methodTypes)
         {
             return GetMethodAttribute<AllowAnonymousAttribute>(controller, methodName, methodTypes) != null ||
                 (GetControllerAttribute<AuthorizeAttribute>(controller) == null &&
@@ -54,7 +63,7 @@ namespace UnitTestProject1
         /// <param name="methodName"></param>
         /// <param name="methodTypes">Optional</param>
         /// <returns></returns>
-        public static bool IsAuthorized(Controller controller, string methodName, Type[] methodTypes)
+        public static bool IsAuthorized(Type controller, string methodName, Type[] methodTypes)
         {
             return GetMethodAttribute<AuthorizeAttribute>(controller, methodName, methodTypes) != null ||
                 (GetControllerAttribute<AuthorizeAttribute>(controller) != null &&
@@ -70,7 +79,7 @@ namespace UnitTestProject1
         /// <param name="roles"></param>
         /// <param name="users"></param>
         /// <returns></returns>
-        public static bool IsAuthorized(Controller controller, string methodName, Type[] methodTypes, string[] roles, string[] users)
+        public static bool IsAuthorized(Type controller, string methodName, Type[] methodTypes, string[] roles, string[] users)
         {
             if (roles == null && users == null)
                 return IsAuthorized(controller, methodName, methodTypes);
@@ -120,17 +129,17 @@ namespace UnitTestProject1
             return true;
         }
 
-        private static T GetControllerAttribute<T>(Controller controller) where T : Attribute
+        private static T GetControllerAttribute<T>(Type controller) where T : Attribute
         {
-            Type type = controller.GetType();
+            Type type = controller;
             object[] attributes = type.GetCustomAttributes(typeof(T), true);
             T attribute = attributes.Count() == 0 ? null : (T)attributes[0];
             return attribute;
         }
 
-        private static T GetMethodAttribute<T>(Controller controller, string methodName, Type[] methodTypes) where T : Attribute
+        private static T GetMethodAttribute<T>(Type controller, string methodName, Type[] methodTypes) where T : Attribute
         {
-            Type type = controller.GetType();
+            Type type = controller;
             if (methodTypes == null)
             {
                 methodTypes = new Type[0];

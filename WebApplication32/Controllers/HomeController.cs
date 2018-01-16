@@ -9,7 +9,7 @@ using WebApplication32.Models;
 
 namespace WebApplication32.Controllers
 {        
-
+    [AllowAnonymous]
     public class HomeController : Controller
     {
 
@@ -18,7 +18,7 @@ namespace WebApplication32.Controllers
             return View();
         }
 
-        [Authorize(Roles = "Admin,Users", Policy = "Abc")]
+        [Authorize(Roles = "Admin,Users,Account", Policy = "Abc")]
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
